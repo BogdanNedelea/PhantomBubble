@@ -1,0 +1,38 @@
+html,body {
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+a, a:hover{
+	text-decoration: none;
+	color: #fff;
+}
+
+.content{
+	background-color: #6d33ff;
+	height: 100%;
+	width: 100%;
+}
+
+.inner-content{
+	height: 100%;
+	width: 100%;
+	padding: 5%;
+}
+
+.form-group{
+	text-align: left;
+	width: 75%;
+	margin: 10px auto;
+	color: #fff;
+}
+
+#login-form{
+	width: 30%;
+	margin: auto;
+}
+
+#logo{
+	margin: 0 auto 50px;	
+
+}
