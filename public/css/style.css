@@ -10,11 +10,9 @@ a, a:hover{
 
 ul{
 	list-style: none;
+	padding: 0;
 }
 
-.btn {
-	width: 100px;
-}
 .content{
 	/*7D3C98*/
 	background-color: #1F618D;
@@ -134,7 +132,7 @@ ul{
 }
 
 .panel-one {
-	height: 50%;
+	height: 70%;
 	margin-bottom: 1px;
 	border-radius: 5px;
 	border: 1px solid #e0e3e5;
@@ -146,11 +144,24 @@ ul{
 }
 
 .panel-two {
-	height: 50%;
+	height: 30%;
 	border-radius: 5px;
 	border: 1px solid #e0e3e5;
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 	border-bottom-right-radius: 0;
 	background-color: #f2f2f2;
+}
+
+.general-panel {
+	height: 50%;
+	border-radius: 5px;
+	border: 1px solid #e0e3e5;
+	background-color: #f2f2f2;
+}
+
+.room-users{
+	width: 100%;
+	height: 180px;
+	overflow-y: scroll;
 }
