@@ -16,7 +16,7 @@
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-	<link rel="stylesheet" type="text/css" href="public/css/style.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
 	<script>
 		$(document).ready(function(){
@@ -36,6 +36,9 @@
 <body>
 	<div class="content">
 		<div class="inner-content">
+			<div class="logo-container">
+				<img class="img-responsive" id="page-logo" src="assets/images/logo.png">
+			</div>
 			<div class="col-xs-2 col-xs-offset-2 containers left-container text-center">
 				<div class="panel-one">
 					<div>

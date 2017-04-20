@@ -23,7 +23,7 @@ ul{
 .inner-content{
 	height: 100%;
 	width: 100%;
-	padding: 3%;
+	padding: 100px;
 }
 
 .form-group{
@@ -34,12 +34,13 @@ ul{
 }
 
 #login-form{
-	width: 30%;
+	width: 35%;
 	margin: auto;
 }
 
 #logo{
-	margin: 0 auto 50px;	
+	margin: 15% auto 3%;	
+	width: 40%;
 }
 
 .containers{
@@ -164,4 +165,15 @@ ul{
 	width: 100%;
 	height: 180px;
 	overflow-y: scroll;
+}
+
+.logo-container{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    height: 60px;
+}
+
+#page-logo{
+	height: 60px;
 }
