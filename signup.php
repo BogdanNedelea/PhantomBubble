@@ -24,14 +24,13 @@
 				?>
 				<div class="form-group">
 					<label>Username</label>
-					<input type="text" name="user" class="form-control" id="username" />
+					<input type="text" name="newuser" class="form-control" placeholder="Insert your new username" id="newuser" />
 				</div>
 				<div class="form-group">
 					<label>Password</label>
-					<input class="form-control" type="password" name="pass" id="password" />
+					<input class="form-control" type="password" name="newpass" placeholder="Insert your new password" id="newpass" />
 				</div>
-				<input class="btn btn-default" name="submit" id="submit" value="Log in"/>
-				<h4>If you dont have an account create one <a href="signup.php">here.</a></h4>
+				<input class="btn btn-default" name="register" id="register" value="Create Account"/>
 			</div>
 		</div>
 	</div>

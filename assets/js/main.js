@@ -1,3 +1,7 @@
+$('#register').click(function(){
+	signup();
+});
+
 $('#submit').click(function(){
 	login();
 });
@@ -9,6 +13,36 @@ $('#password').keypress(function (e) {
   		login();
 	}
 });  
+
+
+
+function signup() {
+	$.ajax({
+	    type: "POST",
+	    url: 'register.php',
+	    dataType: 'json',
+	    data: { 
+	    	newuser: $('#newuser').val(), 
+	    	newpass: $('#newpass').val()
+	    }
+	}).done(function(response){
+	   	if (response === "Account_Created") {
+			swal({
+			  title: "Account was created!",
+			  text: "Your account was successfully created. We'll redirect you to our login page.",
+			  type: "success"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/index.php");
+				}, 1000);
+			});
+		} else {
+			console.log("nu merge responseul");
+		}
+	}).fail(function(data) {
+		console.log("Failed somewhere");
+	});
+}
 
 
 function login() {
