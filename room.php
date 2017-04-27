@@ -2,6 +2,32 @@
 	session_start();
 	if (!isset($_SESSION['logged_in']))
     	header("Location: index.php");
+    include 'db.php';
+
+
+	function renderRoomUsers($username){
+			$template = "";
+			$template .= "<li>".$username."<button class=\"btn btn-danger btn-xs\">Kick</button></li>";
+			return $template; 
+	}
+
+	function renderMesseges($username, $message){
+			$template = "";
+			$template .= "<div class=\"message-box\">";
+				$template .= "<div class=\"text-center\">";
+				$template .= "<p>".$username."</p>";
+				$template .= "</div>";
+
+				$template .= "<div>";
+				$template .= "<p>".$message."</p>";
+				$template .= "</div>";
+			$template .= "</div>";
+
+			return $template;
+
+			// Poza inca nu o avem in DB !
+			// $template = "<img class=\"img-responsive message-avatar\" src=\"https://scontent-arn2-1.xx.fbcdn.net/v/	t1.0-9/11896180_1008851132488645_373543554735047172_n.jpg?oh=97ede1c71c529e5209a0650929e56def&oe=592B8476\">"; 
+	}
 ?>
 
 <!DOCTYPE html>
@@ -63,18 +89,23 @@
 				<div class="panel-two text-center">
 					<div>Room Members
 						<ul class="room-users">
-							<li>BoBo <button class="btn btn-danger btn-xs">Kick</button></li> 
-							<li>Caty <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>Stefan <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>RadaRada <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>RadaRada <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>RadaRada <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>RadaRada <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>RadaRada <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>RadaRada <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>RadaRada <button class="btn btn-danger btn-xs">Kick</button></li>
-							<li>RadaRada <button class="btn btn-danger btn-xs">Kick</button></li>
+							<?php 
+								$query = $conn->prepare("
+									SELECT users.id, users.username
+									FROM users inner join rooms_users
+									ON rooms_users.user_id=users.id
+									WHERE rooms_users.room_id=1
+								");
 
+								$room_number = $_SESSION["room_number"];
+								$query->bindParam(":room_number", $room_number);
+								$query->execute();
+								
+								while ($result = $query->fetch(PDO::FETCH_ASSOC)) {
+									$username = $result['username'];
+									echo renderRoomUsers($username);
+								}
+							?>
 						</ul>
 					</div>
 				</div>
@@ -85,51 +116,24 @@
 				<h2>Room conversation</h2>
 				<div class="chat">
 					<div class="messages-container">
-						<div class="message-box">
-							<div>
-								<img class="img-responsive message-avatar" src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/11896180_1008851132488645_373543554735047172_n.jpg?oh=97ede1c71c529e5209a0650929e56def&oe=592B8476">
-							</div>
-							<div>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non urna nec ligula suscipit scelerisque. Phasellus ex augue, bibendum eu consectetur a, ultrices ut leo. Etiam porta, orci sit amet viverra consequat, erat diam tincidunt leo, sed hendrerit dolor nunc quis ipsum. Aliquam sed hendrerit purus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis ac malesuada mi. Etiam pellentesque erat nulla, id facilisis dolor faucibus eget. Pellentesque sed lobortis ex. Suspendisse interdum facilisis orci non feugiat. Fusce molestie elementum posuere. Mauris in lectus quis orci vehicula varius a nec massa. Nulla eu elementum massa.</p>
-							</div>
-						</div>
+						<?php 
+							$query = $conn->prepare("
+									SELECT username, message 
+									FROM messages 
+									WHERE room_id=:room_number
+							");
 
-						<div class="message-box second-message">
-							<div>
-								<img class="img-responsive message-avatar" src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-1/15697827_1410961632269833_1915917803688311831_n.jpg?oh=a6494de17146d58f39ab962c0a4de25f&oe=59627540">
-							</div>
-							<div>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non urna nec ligula suscipit scelerisque. Phasellus ex augue, bibendum eu consectetur a, ultrices ut leo. Etiam porta, orci sit amet viverra consequat, erat diam tincidunt leo, sed hendrerit dolor nunc quis ipsum. Aliquam sed hendrerit purus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis ac malesuada mi. Etiam pellentesque erat nulla, id facilisis dolor faucibus eget. Pellentesque sed lobortis ex. Suspendisse interdum facilisis orci non feugiat. Fusce molestie elementum posuere. Mauris in lectus quis orci vehicula varius a nec massa. Nulla eu elementum massa.</p>
-							</div>
-						</div>
+							$room_number = $_SESSION["room_number"];
+							$query->bindParam(":room_number", $room_number);
+							$query->execute();
 
-						<div class="message-box third-message">
-							<div>
-								<img class="img-responsive message-avatar" src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/12239618_891378390945998_2731618798855523386_n.jpg?oh=ab62db8bc58c703ad7d72a86dfb9f70a&oe=59592E6B">
-							</div>
-							<div>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non urna nec ligula suscipit scelerisque. Phasellus ex augue, bibendum eu consectetur a, ultrices ut leo. Etiam porta, orci sit amet viverra consequat, erat diam tincidunt leo, sed hendrerit dolor nunc quis ipsum. Aliquam sed hendrerit purus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis ac malesuada mi. Etiam pellentesque erat nulla, id facilisis dolor faucibus eget. Pellentesque sed lobortis ex. Suspendisse interdum facilisis orci non feugiat. Fusce molestie elementum posuere. Mauris in lectus quis orci vehicula varius a nec massa. Nulla eu elementum massa.</p>
-							</div>
-						</div>
-
-						<div class="message-box">
-							<div>
-								<img class="img-responsive message-avatar" src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/11896180_1008851132488645_373543554735047172_n.jpg?oh=97ede1c71c529e5209a0650929e56def&oe=592B8476">
-							</div>
-							<div>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non urna nec ligula suscipit scelerisque. Phasellus ex augue, bibendum eu consectetur a, ultrices ut leo. Etiam porta, orci sit amet viverra consequat, erat diam tincidunt leo, sed hendrerit dolor nunc quis ipsum. Aliquam sed hendrerit purus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis ac malesuada mi. Etiam pellentesque erat nulla, id facilisis dolor faucibus eget. Pellentesque sed lobortis ex. Suspendisse interdum facilisis orci non feugiat. Fusce molestie elementum posuere. Mauris in lectus quis orci vehicula varius a nec massa. Nulla eu elementum massa.</p>
-							</div>
-						</div>
-
-						<div class="message-box second-message">
-							<div>
-								<img class="img-responsive message-avatar" src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-1/15697827_1410961632269833_1915917803688311831_n.jpg?oh=a6494de17146d58f39ab962c0a4de25f&oe=59627540">
-							</div>
-							<div>
-								<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec non urna nec ligula suscipit scelerisque. Phasellus ex augue, bibendum eu consectetur a, ultrices ut leo. Etiam porta, orci sit amet viverra consequat, erat diam tincidunt leo, sed hendrerit dolor nunc quis ipsum. Aliquam sed hendrerit purus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Duis ac malesuada mi. Etiam pellentesque erat nulla, id facilisis dolor faucibus eget. Pellentesque sed lobortis ex. Suspendisse interdum facilisis orci non feugiat. Fusce molestie elementum posuere. Mauris in lectus quis orci vehicula varius a nec massa. Nulla eu elementum massa.</p>
-							</div>
-						</div>
-						</div>
+							while ($result = $query->fetch(PDO::FETCH_ASSOC)) {
+								$username = $result['username'];
+								$message = $result['message'];
+								echo renderMesseges($username, $message);
+							}
+						?>
+					  </div>
 					</div>
 					<div class="input-container">
 						<input type="text" class="form-control input-message pull-left" placeholder="Enter your message...">
