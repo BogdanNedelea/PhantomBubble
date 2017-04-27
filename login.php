@@ -18,6 +18,10 @@
 		$username = $result['username'];
 		$user_id = $result['id'];
 
+		$secretKey="ThisIsASecretKey12345678";
+		// Based65 just for now !!
+		$encrypt_pass=base64_encode(mcrypt_encrypt('tripledes',$secretKey,$pass,'ecb'));
+
 		$check_attempt = $result['attempt'];
 		$number_attempts = $check_attempt ? $check_attempt : 0;
 		$last_attempt = $result['date'];
@@ -44,7 +48,7 @@
 		}
 
 		if($difference >= 5 || $number_attempts < 3){
-			if($password === $pass) {
+			if($password === $encrypt_pass) {
 
 				$_SESSION["logged_in"] = "true";
 				$_SESSION['username'] = $username;
