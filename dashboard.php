@@ -2,6 +2,7 @@
 	session_start();
 	if (!isset($_SESSION['logged_in']))
     	header("Location: index.php");
+    include 'db.php';
 ?>
 
 <!DOCTYPE html>
@@ -27,9 +28,29 @@
 				<img class="img-responsive" id="page-logo" src="assets/images/logo.png">
 			</div>
 			<div class="general-panel">
-				You are logged in !<br>
-				<a href="logout.php"><button class="btn btn-danger">Logout</button> </a>
+				<?php  
+					print 'Welcome '.$_SESSION['username'].' !';
+					
+					$tempuserid= $_SESSION['user_id'];
+					$query = $conn->prepare("
+							SELECT rooms.id, rooms.name
+							FROM rooms inner join rooms_users
+							ON rooms_users.room_id=rooms.id
+							WHERE rooms_users.user_id=:temp_userid
+					");
+
+					$query->bindParam(":temp_userid", $tempuserid);
+					$query->execute();
+
+				    while ($result = $query->fetch(PDO::FETCH_ASSOC)) { ?>
+				    	<br><br><button class="btn btn-primary">
+				    		<?php echo $result['name'];?>
+				    	</button> 
+				    <?php }
+				?>
+				<br><br><br>
 				<a href="room.php"><button class="btn btn-primary"> Go to your room</button> </a>
+				<a href="logout.php"><button class="btn btn-danger">Logout</button> </a>
 			</div>
 		</div>
 	</div>
