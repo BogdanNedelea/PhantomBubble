@@ -6,6 +6,11 @@ $('#submit').click(function(){
 	login();
 });
 
+$('.enter-room').click(function(e){
+	$roomId = (e.target.id);
+	accessRoom($roomId);
+});
+
 $('#password').keypress(function (e) {
 	var key = e.which;
 	if(key == 13)  // the enter key code
@@ -14,6 +19,40 @@ $('#password').keypress(function (e) {
 	}
 });  
 
+function accessRoom(roomId) {
+	$.ajax({
+	    type: "POST",
+	    url: 'room_access.php',
+	    dataType: 'json',
+	    data: { 
+	    	roomId: roomId
+	    }
+	}).done(function(response){
+	   	if (response === "Advance") {
+	   		console.log("the response  is ", response);
+			swal({
+			  title: "You exist in this room",
+			  text: "In few second you'll join the room !",
+			  type: "success"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 1000);
+			});
+		} else if (response === "Invalid_room") {
+			console.log("the response  is ", response);
+			swal({
+			  title: "Wrong!",
+			  text: "You wanted to acess a room you dont belong to !",
+			  type: "warning",
+			  confirmButtonText: "Ok"
+			});
+		} else {
+		}
+	}).fail(function(data) {
+		console.log("Action not allowed !");
+	});
+}
 
 
 function signup() {

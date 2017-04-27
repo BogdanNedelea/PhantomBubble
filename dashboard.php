@@ -14,6 +14,9 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+	<script src="assets/js/sweetalert.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="assets/css/sweetalert.css">
 </head>
 <body>
 	<?php
@@ -28,9 +31,9 @@
 				<img class="img-responsive" id="page-logo" src="assets/images/logo.png">
 			</div>
 			<div class="general-panel">
-				<?php  
-					print 'Welcome '.$_SESSION['username'].' !';
-					
+				  
+				<div id="welcome-user"><?php print 'Welcome '.$_SESSION['username'].' !' ?></div>
+				<?php
 					$tempuserid= $_SESSION['user_id'];
 					$query = $conn->prepare("
 							SELECT rooms.id, rooms.name
@@ -43,16 +46,18 @@
 					$query->execute();
 
 				    while ($result = $query->fetch(PDO::FETCH_ASSOC)) { ?>
-				    	<br><br><button class="btn btn-primary">
-				    		<?php echo $result['name'];?>
-				    	</button> 
+					<br><button class="btn btn-info enter-room" 
+							id="<?php echo $result['id'];?>">
+								<?php echo $result['name'];?>
+						</button><br>
 				    <?php }
 				?>
 				<br><br><br>
-				<a href="room.php"><button class="btn btn-primary"> Go to your room</button> </a>
+				<!-- <a href="room.php"><button class="btn btn-primary"> Go to your room</button> </a> -->
 				<a href="logout.php"><button class="btn btn-danger">Logout</button> </a>
 			</div>
 		</div>
 	</div>
+	<script src="assets/js/main.js"></script>
 </body>
 </html>
