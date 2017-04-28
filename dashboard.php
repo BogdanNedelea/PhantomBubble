@@ -17,6 +17,16 @@
 
 	<script src="assets/js/sweetalert.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="assets/css/sweetalert.css">
+
+	<script>
+		$(document).ready(function(){
+			$(".new-room").hide();
+			$(".add-room").click(function(){
+			    $(".new-room").slideToggle();
+
+			});
+		});
+	</script>
 </head>
 <body>
 	<?php
@@ -31,7 +41,6 @@
 				<img class="img-responsive" id="page-logo" src="assets/images/logo.png">
 			</div>
 			<div class="general-panel">
-				  
 				<div id="welcome-user"><?php print 'Welcome '.$_SESSION['username'].' !' ?></div>
 				<?php
 					$tempuserid= $_SESSION['user_id'];
@@ -53,6 +62,14 @@
 				    <?php }
 				?>
 				<br><br><br>
+
+				<div class="new-room-container">
+					<button class="btn btn-default add-room">Add room</button>
+					<div class="new-room"> 
+						Room name <input class="form-control" type="text" name="room-name" id="room-name">
+						<button class="btn btn-success create-room"> Create </button>	
+					</div>
+				</div>
 				<!-- <a href="room.php"><button class="btn btn-primary"> Go to your room</button> </a> -->
 				<a href="logout.php"><button class="btn btn-danger">Logout</button> </a>
 			</div>
