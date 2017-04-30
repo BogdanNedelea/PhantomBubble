@@ -51,7 +51,7 @@
 
 	<script src="assets/js/sweetalert.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="assets/css/sweetalert.css">
-	
+
 	<script>
 		$(document).ready(function(){
 			$(".new-user").hide();
@@ -73,10 +73,12 @@
 			<div class="logo-container">
 				<img class="img-responsive" id="page-logo" src="assets/images/logo.png">
 			</div>
+			<div>
+				<a href="./dashboard.php"><div class="back-btn">Back</div></a>
+			</div>
 			<div class="col-xs-2 col-xs-offset-2 containers left-container text-center">
 				<div class="panel-one">
 					<div>
-						Username
 						<img class="img-responsive profile-avatar" src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/11896180_1008851132488645_373543554735047172_n.jpg?oh=97ede1c71c529e5209a0650929e56def&oe=592B8476">
 					</div>
 					<div>

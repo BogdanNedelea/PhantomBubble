@@ -29,6 +29,53 @@ $('.kick-btn').click(function(e){
 	kickUser($userId);
 });
 
+$('.input-message').keypress(function (e){
+	var key = e.which;
+	if(key == 13)  // the enter key code
+	{
+		$('.btn-send').click();
+	}
+});
+
+$('.btn-send').click(function () {
+	$message = $('.input-message').val();
+  	sendMessage($message);
+});
+
+function sendMessage(message){
+	$.ajax({
+	    type: "POST",
+	    url: 'room_actions.php',
+	    dataType: 'json',
+	    data: {
+	    	message: message
+	    }
+	}).done(function (response) {
+		console.log("The response is", response);
+	   	if (response === "Success") {
+	   		$(".message-box").append('<div>'+response+'</div>'); 
+	   		
+	   		
+			// setTimeout(function(){
+			//    location.replace("/PhantomBubble/room.php");
+			// }, 100);
+		} else if (response === "Error"){
+			swal({
+			  title: "Error !",
+			  text: "There's been a problem. Please try again !",
+			  type: "error"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 100);
+			});
+		}
+	}).fail(function(data) {
+		console.log("Action not allowed !");
+	});
+}
+
+
 function kickUser(userId){
 	$.ajax({
 	    type: "POST",
