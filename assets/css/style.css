@@ -168,6 +168,13 @@ ul{
 	overflow-y: scroll;
 }
 
+.users-list{
+	float: left;
+	width: 60%;
+	height: 35px;
+	text-align: left;
+}
+
 .logo-container{
     position: absolute;
     top: 20px;

@@ -21,10 +21,49 @@ $('#password').keypress(function (e) {
 });  
 
 $('.create-room').click(function(){
-	console.log("log from function", $('#room-name').val());
 	createRoom();
 });
 
+$('.kick-btn').click(function(e){
+	$userId = (e.target.id);
+	kickUser($userId);
+});
+
+function kickUser(userId){
+	$.ajax({
+	    type: "POST",
+	    url: 'room_actions.php',
+	    dataType: 'json',
+	    data: {
+	    	action:'kick_user',
+	    	userId: userId
+	    }
+	}).done(function (response) {
+	   	if (response === "Success") {
+			swal({
+			  title: "Success!",
+			  text: "The user was kicked with success!",
+			  type: "success"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 1000);
+			});
+		} else if (response === "Error"){
+			swal({
+			  title: "Error !",
+			  text: "There's been a problem. Please try again !",
+			  type: "error"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 1000);
+			});
+		}
+	}).fail(function(data) {
+		console.log("Action not allowed !");
+	});
+}
 
 function createRoom() {
 	$.ajax({
@@ -85,7 +124,6 @@ function accessRoom(roomId) {
 		console.log("Action not allowed !");
 	});
 }
-
 
 function signup() {
 	$.ajax({

@@ -3,11 +3,16 @@
 	if (!isset($_SESSION['logged_in']))
     	header("Location: index.php");
     include 'db.php';
+    $isAdmin = false;
 
-
-	function renderRoomUsers($username){
+	function renderRoomUsers($username, $user_id, $isAdmin){
 			$template = "";
-			$template .= "<li>".$username."<button class=\"btn btn-danger btn-xs\">Kick</button></li>";
+			$template .= "<div class=\"col-xs-12\">";
+			$template .= "<div class=\"users-list\">$username</div>";
+			if($isAdmin){
+				$template .= "<button class=\"btn btn-danger btn-xs kick-btn\" id=\"$user_id\"> Kick </button>";
+			}
+			$template .= "</div>";
 			return $template; 
 	}
 
@@ -44,6 +49,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
 
+	<script src="assets/js/sweetalert.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="assets/css/sweetalert.css">
+	
 	<script>
 		$(document).ready(function(){
 			$(".new-user").hide();
@@ -87,26 +95,46 @@
 					</div>
 				</div>
 				<div class="panel-two text-center">
-					<div>Room Members
-						<ul class="room-users">
+					<div><h4>Room Members</h4>
+						<div class="room-users">
 							<?php 
+								// Check if the actual user is the admin
+								$user_id = $_SESSION['user_id'];
+								$room_number = $_SESSION["room_number"];
+								$query = $conn->prepare("
+									SELECT created_by
+									FROM rooms
+									WHERE created_by=:user_id and id=:room_number
+								");
+
+								$query->bindParam(":user_id", $user_id);
+								$query->bindParam(":room_number", $room_number);
+								$query->execute();
+									global $isAdmin;
+									if($result = $query->fetch(PDO::FETCH_ASSOC)){
+										$isAdmin = true; 
+									} else {
+										$isAdmin = false; 
+									}
+
+								// Display all the members of this room
 								$query = $conn->prepare("
 									SELECT users.id, users.username
 									FROM users inner join rooms_users
 									ON rooms_users.user_id=users.id
-									WHERE rooms_users.room_id=1
+									WHERE rooms_users.room_id=:room_number
 								");
-
 								$room_number = $_SESSION["room_number"];
 								$query->bindParam(":room_number", $room_number);
 								$query->execute();
 								
 								while ($result = $query->fetch(PDO::FETCH_ASSOC)) {
+									$user_id = $result['id'];
 									$username = $result['username'];
-									echo renderRoomUsers($username);
+									echo renderRoomUsers($username, $user_id, $isAdmin);
 								}
 							?>
-						</ul>
+						</div>
 					</div>
 				</div>
 
@@ -142,5 +170,6 @@
 			</div>
 		</div>
 	</div>
+	<script src="assets/js/main.js"></script>
 </body>
 </html>
