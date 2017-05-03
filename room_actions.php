@@ -21,14 +21,74 @@
 		$query->bindParam(":username", $username);
 		$query->bindParam(":room_id", $roomId);
 		$query->bindParam(":message", $message);
+		$query->execute();
 
-		if($query->execute())
+		if($query->rowCount())
 		{
 			$response = "Success";
 		}else{
 			$response = "Error";
 		}
 	}
+
+
+	if(isset($_POST['newUser']) && $_POST['newUser']) {
+
+		$newuser = $_POST['newUser'];
+		$query = $conn->prepare("
+			SELECT id FROM users
+			WHERE username=:newuser
+		");
+		$query->bindParam(":newuser", $newuser);
+		$query->execute();
+
+		if($query->rowCount()){
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+			$userId = $result['id'];
+			$roomId = $_SESSION["room_number"];
+
+			$query = $conn->prepare("
+				INSERT INTO rooms_users (user_id, room_id) 
+				VALUES (:user_id, :room_id)
+			");
+			$query->bindParam(":user_id", $userId);
+			$query->bindParam(":room_id", $roomId);
+			if($query->execute()){
+				$response = "Success";
+			} else {
+				$response = "Error";
+			}
+		} else {
+			$response = "No_user";
+		}
+	}
+
+	
+	if(isset($_POST['roomId']) && $_POST['roomId']) {
+		$room_id = $_POST['roomId'];
+		$query = $conn->prepare("
+			DELETE FROM rooms
+			WHERE id=:room_number
+		");
+		$query->bindParam(":room_number", $room_id);
+		$query->execute();
+
+		$stmt = $conn->prepare("
+			DELETE FROM rooms_users 
+			WHERE room_id=:roomId"
+		);
+		$stmt->bindParam(":roomId", $room_id);
+		$stmt->execute();
+
+		
+		if($query->rowCount() && $stmt->rowCount())
+		{
+			$response = "Success";
+		}else{
+			$response = "Error";
+		}
+	}
+
 
 	if(isset($_POST['action']) && $_POST['action'] == 'kick_user') {
 		$userId = $_POST['userId'];
@@ -41,7 +101,8 @@
 		$query->bindParam(":user_id", $userId);
 		$query->bindParam(":room_number", $room_number);
 
-		if($query->execute())
+		$query->execute();
+		if($query->rowCount())
 		{
 			$response = "Success";
 		}else{

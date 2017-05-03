@@ -29,6 +29,11 @@ $('.kick-btn').click(function(e){
 	kickUser($userId);
 });
 
+
+$('.btn-send').click(function () {
+	$message = $('.input-message').val();
+  	sendMessage($message);
+});
 $('.input-message').keypress(function (e){
 	var key = e.which;
 	if(key == 13)  // the enter key code
@@ -37,10 +42,104 @@ $('.input-message').keypress(function (e){
 	}
 });
 
-$('.btn-send').click(function () {
-	$message = $('.input-message').val();
-  	sendMessage($message);
-});
+
+$('.delete-room').click(function (e) {
+	$roomId = (e.target.id);
+	deleteRoom($roomId);
+});  
+
+$('#new-user').keypress(function (e) {
+	var key = e.which;
+	if(key == 13)  // the enter key code
+	{
+		$newUser =  $('#new-user').val();
+		addUser($newUser);
+	}
+}); 
+
+
+function addUser(newUser){
+	$.ajax({
+	    type: "POST",
+	    url: 'room_actions.php',
+	    dataType: 'json',
+	    data: {
+	    	newUser: newUser
+	    }
+	}).done(function (response) {
+		if (response === "Success") {
+			swal({
+			  title: "Success!",
+			  text: "The user was added to your room !",
+			  type: "success"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 1000);
+			});
+		} else if (response === "Error"){
+			swal({
+			  title: "Error !",
+			  text: "There's been a problem. Please try again !",
+			  type: "error"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 1000);
+			});
+		} else if (response === "No_user"){
+			swal({
+			  title: "Warning !",
+			  text: "The user with that username doesn't exists !",
+			  type: "warning"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 1000);
+			});
+		}
+	}).fail(function(data) {
+		console.log("Action not allowed !");
+	});
+}
+
+
+
+function deleteRoom(roomId){
+	$.ajax({
+	    type: "POST",
+	    url: 'room_actions.php',
+	    dataType: 'json',
+	    data: {
+	    	roomId: roomId
+	    }
+	}).done(function (response) {
+		if (response === "Success") {
+			swal({
+			  title: "Success!",
+			  text: "The room was successfully deleted !",
+			  type: "success"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/dashboard.php");
+				}, 1000);
+			});
+		} else if (response === "Error"){
+			swal({
+			  title: "Error !",
+			  text: "There's been a problem. Please try again !",
+			  type: "error"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 1000);
+			});
+		}
+	}).fail(function(data) {
+		console.log("Action not allowed !");
+	});
+}
+
 
 function sendMessage(message){
 	$.ajax({
@@ -51,7 +150,6 @@ function sendMessage(message){
 	    	message: message
 	    }
 	}).done(function (response) {
-		console.log("The response is", response);
 	   	if (response === "Success") {
 	   		$(".message-box").append('<div>'+response+'</div>'); 
 	   		
@@ -121,7 +219,6 @@ function createRoom() {
 	    	roomName: $('#room-name').val()
 	    }
 	}).done(function (response) {
-   		console.log("the response  is ", response);
 	   	if (response === "Success") {
 			swal({
 			  title: "Success!",

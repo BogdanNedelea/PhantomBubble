@@ -85,14 +85,14 @@
 						<div>
 							<button class="btn btn-default add-user">Add User</button>
 							<div class="new-user"> 
-								Add the new user : <input class="form-control" type="text" name="new-user"> 
+								<input class="form-control" type="text" name="new-user" id="new-user"> 
 							</div>
 						</div>
 						<div>
 							<button class="btn btn-default edit-room">Room Settings</button>
-							<div class="room-settings"> 
-								<button class="btn btn-danger">Delete conversation</button>
-							</div>
+								<div class="room-settings"> 
+									<button class="btn btn-danger delete-room" id='<?php echo $_SESSION["room_number"]?>'>Delete conversation</button>
+								</div>
 						</div>
 					</div>
 				</div>
