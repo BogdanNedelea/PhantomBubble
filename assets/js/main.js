@@ -289,7 +289,14 @@ function signup() {
 				   location.replace("/PhantomBubble/index.php");
 				}, 1000);
 			});
-		} else {
+		} else if(response === "Duplicate") {
+			swal({
+			  title: "Already Used",
+			  text: "Username already exists !",
+			  type: "warning"
+			});
+		} 
+		else {
 			console.log("nu merge responseul");
 		}
 	}).fail(function(data) {
