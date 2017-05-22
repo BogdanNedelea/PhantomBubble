@@ -9,39 +9,53 @@
 	if(isset($_POST["roomName"]) && $_POST["roomName"]) {
 		$roomName = $_POST["roomName"];
 		$userId= $_SESSION["user_id"];
-
+		
 		$query = $conn->prepare("
-			INSERT INTO `rooms`(`name`, `created_by`) 
-			VALUES (:room_name,:created_by)
-		");
-		$query->bindParam(":created_by", $userId);
-		$query->bindParam(":room_name", $roomName);
-		$query->execute();
-
-
-		$query = $conn->prepare("
-			SELECT id, created_by
+			SELECT name, created_by
 			FROM rooms
-			WHERE `name`=:room_name and `created_by`=:created_by 
+			WHERE name=:roomName and created_by=:userId
 		");
-		$query->bindParam(":created_by", $userId);
-		$query->bindParam(":room_name", $roomName);
+		$query->bindParam(":roomName", $roomName);
+		$query->bindParam(":userId", $userId);
 		$query->execute();
 		$result = $query->fetch(PDO::FETCH_ASSOC);
-		
-		$newroomId = $result['id'];
-		$roomAdmin = $result['created_by'];
 
-		$query = $conn->prepare("
-			INSERT INTO `rooms_users`(`user_id`, `room_id`) 
-			VALUES (:user_id,:room_id)
-		");
-		$query->bindParam(":user_id", $roomAdmin);
-		$query->bindParam(":room_id", $newroomId);
-		$query->execute();
+		//If the room name is used dont allow to create another room with the same name
+		if(!$result){
+			$query = $conn->prepare("
+				INSERT INTO `rooms`(`name`, `created_by`) 
+				VALUES (:room_name,:created_by)
+			");
+			$query->bindParam(":created_by", $userId);
+			$query->bindParam(":room_name", $roomName);
+			$query->execute();
 
-		$_SESSION['room_number'] = $newroomId;
-		$response = "Success";
+			$query = $conn->prepare("
+				SELECT id, created_by
+				FROM rooms
+				WHERE `name`=:room_name and `created_by`=:created_by 
+			");
+			$query->bindParam(":created_by", $userId);
+			$query->bindParam(":room_name", $roomName);
+			$query->execute();
+			$result = $query->fetch(PDO::FETCH_ASSOC);
+			
+			$newroomId = $result['id'];
+			$roomAdmin = $result['created_by'];
+
+			$query = $conn->prepare("
+				INSERT INTO `rooms_users`(`user_id`, `room_id`) 
+				VALUES (:user_id,:room_id)
+			");
+			$query->bindParam(":user_id", $roomAdmin);
+			$query->bindParam(":room_id", $newroomId);
+			$query->execute();
+
+			$_SESSION['room_number'] = $newroomId;
+			$response = "Success";
+		} else {
+			$response = "Duplicate";
+		}
 	}
 
 	// Check if the user exists in that specific room. If yes, send him there.

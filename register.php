@@ -13,23 +13,24 @@
 			SELECT username FROM users
 			WHERE username=:newuser
 		");
-		$query->bindParam(":newuser", $newuser);
+		$query->bindParam(":newuser", $user);
 		$query->execute();
+		$result = $query->fetch(PDO::FETCH_ASSOC);
 
-		if($query->rowCount()){
+		if(!$result){
 
 			$secretKey="ThisIsASecretKey12345678";
 			// Based65 just for now !!
 			$encrypt_pass=base64_encode(mcrypt_encrypt('tripledes',$secretKey,$pass,'ecb'));
 
 			$query = $conn->prepare("INSERT INTO users (username, password) 
-									 VALUES (:username, :password)");;
+									 VALUES (:username, :password)");
 			$query->bindParam(":username", $user);
 			$query->bindParam(":password", $encrypt_pass);
 			$query->execute();
 
 			$response = "Account_Created";
-		} else {
+		} else {	
 			$response = "Duplicate";
 		}
 	}

@@ -229,7 +229,13 @@ function createRoom() {
 				   location.replace("/PhantomBubble/room.php");
 				}, 1000);
 			});
-		}
+		} else if(response === "Duplicate") {
+			swal({
+			  title: "Already Used",
+			  text: "Room name already used !",
+			  type: "warning"
+			});
+		} 
 	}).fail(function(data) {
 		console.log("Action not allowed !");
 	});
@@ -292,7 +298,7 @@ function signup() {
 		} else if(response === "Duplicate") {
 			swal({
 			  title: "Already Used",
-			  text: "Username already exists !",
+			  text: "Username already exists!",
 			  type: "warning"
 			});
 		} 
