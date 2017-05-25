@@ -40,8 +40,9 @@
 			<div class="logo-container">
 				<img class="img-responsive" id="page-logo" src="assets/images/logo.png">
 			</div>
-			<div class="general-panel">
-				<div id="welcome-user"><?php print 'Welcome '.$_SESSION['username'].' !' ?></div>
+			<h2 id="welcome-user"><?php print 'Welcome '.$_SESSION['username'].' !' ?></h2>
+			<div class="dashboard-panel">
+				<h3>Available rooms</h3>
 				<?php
 					$tempuserid= $_SESSION['user_id'];
 					$query = $conn->prepare("
@@ -61,17 +62,19 @@
 						</button><br>
 				    <?php }
 				?>
-				<br><br><br>
-
-				<div class="new-room-container">
+			</div>
+			<div class="dashboard-panel">
+				<div class="dashboard-footer">
 					<button class="btn btn-default add-room">Add room</button>
 					<div class="new-room"> 
-						Room name <input class="form-control" type="text" name="room-name" id="room-name">
-						<button class="btn btn-success create-room"> Create </button>	
+						<input class="form-control space-above" type="text" name="room-name" placeholder="Room name..." id="room-name">
+						<button class="btn btn-success create-room space-above"> Create </button>	
 					</div>
 				</div>
-				<!-- <a href="room.php"><button class="btn btn-primary"> Go to your room</button> </a> -->
-				<a href="logout.php"><button class="btn btn-danger">Logout</button> </a>
+				<div class="dashboard-footer pull-right">
+					<a href="logout.php"><button class="btn btn-danger pull-right">Logout</button> </a>
+				</div>
+				
 			</div>
 		</div>
 	</div>

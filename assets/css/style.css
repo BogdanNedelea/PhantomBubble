@@ -20,6 +20,10 @@ ul{
 	width: 100%;
 }
 
+.space-above{
+	margin-top: 10px;
+}
+
 .inner-content{
 	height: 100%;
 	width: 100%;
@@ -133,16 +137,16 @@ ul{
 }
 
 .back-btn{
-    width: 70px;
-    height: 70px;
+    width: 55px;
+    height: 55px;
     text-align: center;
-    line-height: 70px;
+    line-height: 55px;
     background: #f2f2f2;
     color: #000;
     border-radius: 100%;
     position: absolute;
     top: 10%;
-    left: 20px;
+    left: 25px;
 }
 
 .panel-one {
@@ -204,8 +208,28 @@ ul{
 	width: 200px;
 }
 
-.new-room-container{
+/*.new-room-container{
 	position: absolute;
 	top: 10px;
 	right: 100px;
+}*/
+
+#welcome-user {
+	color: #fff;
+    text-align: center;
+}
+
+.dashboard-panel{
+	height: auto;
+	padding: 20px;
+	margin-top: 10px;
+	border-radius: 5px;
+	border: 1px solid #e0e3e5;
+	background-color: #f2f2f2;
+    position: relative;
+}
+
+.dashboard-footer{
+    width: 50%;
+    display: inline-block;
 }

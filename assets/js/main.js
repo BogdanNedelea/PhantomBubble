@@ -151,7 +151,8 @@ function sendMessage(message){
 	    }
 	}).done(function (response) {
 	   	if (response === "Success") {
-	   		$(".message-box").append('<div>'+response+'</div>'); 
+	   		$(".messages-container").append('<div class=\"message-box\">'+message+'</div>');
+	   		$(".input-message").val('');
 	   		
 	   		
 			// setTimeout(function(){
