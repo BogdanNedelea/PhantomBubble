@@ -151,13 +151,11 @@ function sendMessage(message){
 	    }
 	}).done(function (response) {
 	   	if (response === "Success") {
-	   		$(".messages-container").append('<div class=\"message-box\">'+message+'</div>');
-	   		$(".input-message").val('');
-	   		
-	   		
-			// setTimeout(function(){
-			//    location.replace("/PhantomBubble/room.php");
-			// }, 100);
+	   		// $(".messages-container").append('<div class=\"message-box\">'+message+'</div>');
+	   		// $(".input-message").val('');
+			setTimeout(function(){
+			   location.replace("/PhantomBubble/room.php");
+			}, 100);
 		} else if (response === "Error"){
 			swal({
 			  title: "Error !",

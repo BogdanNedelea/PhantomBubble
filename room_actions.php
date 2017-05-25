@@ -1,6 +1,7 @@
 <?php 
 	session_start();
 	include 'db.php';
+	define('AES_256_CBC', 'aes-256-cbc');
 
 	if (!isset($_SESSION['logged_in']))
 		header("Location: index.php");
@@ -13,6 +14,20 @@
 		$message = $_POST['message'];
 
 		$query = $conn->prepare("
+			SELECT room_key, room_iv 
+			FROM rooms 
+			WHERE id=:room_number
+		");
+		$room_number = $_SESSION["room_number"];
+		$query->bindParam(":room_number", $room_number);
+		$query->execute();
+		$result = $query->fetch(PDO::FETCH_ASSOC);
+		$encryption_key = $result['room_key'];
+		$iv = $result['room_iv'];
+
+		$encrypted = openssl_encrypt($message, AES_256_CBC, $encryption_key, 0, $iv);
+
+		$query = $conn->prepare("
 			INSERT INTO `messages`(`user_id`, `username`, `room_id`, `message`) 
 			VALUES (:user_id, :username, :room_id, :message)
 		");
@@ -20,7 +35,7 @@
 		$query->bindParam(":user_id", $userId);
 		$query->bindParam(":username", $username);
 		$query->bindParam(":room_id", $roomId);
-		$query->bindParam(":message", $message);
+		$query->bindParam(":message", $encrypted);
 		$query->execute();
 
 		if($query->rowCount())

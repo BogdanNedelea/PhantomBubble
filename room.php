@@ -3,6 +3,8 @@
 	if (!isset($_SESSION['logged_in']))
     	header("Location: index.php");
     include 'db.php';
+    define('AES_256_CBC', 'aes-256-cbc');
+
     $isAdmin = false;
 
 	function renderRoomUsers($username, $user_id, $isAdmin){
@@ -152,15 +154,30 @@
 									FROM messages 
 									WHERE room_id=:room_number
 							");
-
 							$room_number = $_SESSION["room_number"];
 							$query->bindParam(":room_number", $room_number);
 							$query->execute();
 
+							$stmt = $conn->prepare("
+								SELECT room_key, room_iv 
+								FROM rooms 
+								WHERE id=:room_number
+							");
+
+							$room_number = $_SESSION["room_number"];
+							$stmt->bindParam(":room_number", $room_number);
+							$stmt->execute();
+
+							$secondResult = $stmt->fetch(PDO::FETCH_ASSOC);
+							$encryption_key = $secondResult['room_key'];
+							$iv = $secondResult['room_iv'];
+
 							while ($result = $query->fetch(PDO::FETCH_ASSOC)) {
 								$username = $result['username'];
 								$message = $result['message'];
-								echo renderMesseges($username, $message);
+									
+								$decrypt = openssl_decrypt($message, AES_256_CBC, $encryption_key, 0, $iv);
+								echo renderMesseges($username, $decrypt);
 							}
 						?>
 					  </div>

@@ -22,12 +22,18 @@
 
 		//If the room name is used dont allow to create another room with the same name
 		if(!$result){
+			define('AES_256_CBC', 'aes-256-cbc');
+			$encryption_key = openssl_random_pseudo_bytes(32);
+			$iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(AES_256_CBC));
+
 			$query = $conn->prepare("
-				INSERT INTO `rooms`(`name`, `created_by`) 
-				VALUES (:room_name,:created_by)
+				INSERT INTO `rooms`(`name`, `created_by`, `room_key`, `room_iv`) 
+				VALUES (:room_name, :created_by, :encryption_key, :room_iv)
 			");
 			$query->bindParam(":created_by", $userId);
 			$query->bindParam(":room_name", $roomName);
+			$query->bindParam(":encryption_key", $encryption_key);
+			$query->bindParam(":room_iv", $iv);
 			$query->execute();
 
 			$query = $conn->prepare("
