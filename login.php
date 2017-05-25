@@ -12,15 +12,11 @@
 		$query = $conn->prepare("SELECT * FROM users WHERE username= :username LIMIT 1");
 		$query->bindParam(":username", $user);
 		$query->execute();
-		
+
 		$result = $query->fetch(PDO::FETCH_ASSOC);
 		$password = $result['password'];
 		$username = $result['username'];
 		$user_id = $result['id'];
-
-		$secretKey="ThisIsASecretKey12345678";
-		// Based65 just for now !!
-		$encrypt_pass=base64_encode(mcrypt_encrypt('tripledes',$secretKey,$pass,'ecb'));
 
 		$check_attempt = $result['attempt'];
 		$number_attempts = $check_attempt ? $check_attempt : 0;
@@ -33,6 +29,8 @@
 		$difference = round($interval/60);
 		$time_left = 5-$difference;
 		
+		$passwordCheck = password_verify($pass, (string)$password);
+
 		function update_db($number_attempts, $username) {
 			include 'db.php';
 			$attempt_time = (new DateTime())->format('Y-m-d H:i:s');
@@ -48,13 +46,12 @@
 		}
 
 		if($difference >= 5 || $number_attempts < 3){
-			if($password === $encrypt_pass) {
-
+			if ($passwordCheck) {
 				$_SESSION["logged_in"] = "true";
 				$_SESSION['username'] = $username;
 				$_SESSION['user_id'] = $user_id;
 				$response = "Success";
-			} elseif ($username === $user && $password != $pass)  {
+			} elseif ($username === $user && !$passwordCheck)  {
 				if($number_attempts == 2) {
 
 					$number_attempts++;
@@ -73,6 +70,5 @@
 			$response = "Locked";
 		}
 	}
-
-	echo json_encode($response)
+	echo json_encode($response);
 ?>

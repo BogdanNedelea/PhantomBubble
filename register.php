@@ -19,14 +19,13 @@
 
 		if(!$result){
 
-			$secretKey="ThisIsASecretKey12345678";
-			// Based65 just for now !!
-			$encrypt_pass=base64_encode(mcrypt_encrypt('tripledes',$secretKey,$pass,'ecb'));
+			$options = ['cost' => 12];
+			$hash = password_hash($pass, PASSWORD_BCRYPT, $options);
 
 			$query = $conn->prepare("INSERT INTO users (username, password) 
 									 VALUES (:username, :password)");
 			$query->bindParam(":username", $user);
-			$query->bindParam(":password", $encrypt_pass);
+			$query->bindParam(":password", $hash);
 			$query->execute();
 
 			$response = "Account_Created";
