@@ -97,17 +97,18 @@ function addUser(newUser){
 			  title: "Warning !",
 			  text: "The user with that username doesn't exists !",
 			  type: "warning"
-			},function(){
-				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
-				}, 1000);
+			});
+		} else if (response === "Already"){
+			swal({
+			  title: "Warning !",
+			  text: "User already in the room !",
+			  type: "warning"
 			});
 		}
 	}).fail(function(data) {
 		console.log("Action not allowed !");
 	});
 }
-
 
 
 function deleteRoom(roomId){

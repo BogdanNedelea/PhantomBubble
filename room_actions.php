@@ -62,16 +62,29 @@
 			$userId = $result['id'];
 			$roomId = $_SESSION["room_number"];
 
-			$query = $conn->prepare("
-				INSERT INTO rooms_users (user_id, room_id) 
-				VALUES (:user_id, :room_id)
+			$stmt = $conn->prepare("
+				SELECT room_id FROM rooms_users
+				WHERE user_id=:user_id
 			");
-			$query->bindParam(":user_id", $userId);
-			$query->bindParam(":room_id", $roomId);
-			if($query->execute()){
-				$response = "Success";
+			$stmt->bindParam(":user_id", $userId);
+			$stmt->execute();
+
+			if($stmt->rowCount()) {
+				$response = "Already";
 			} else {
-				$response = "Error";
+				$query->bindParam(":room_id", $roomId);
+
+				$query = $conn->prepare("
+					INSERT INTO rooms_users (user_id, room_id) 
+					VALUES (:user_id, :room_id)
+				");
+				$query->bindParam(":user_id", $userId);
+				$query->bindParam(":room_id", $roomId);
+				if($query->execute()){
+					$response = "Success";
+				} else {
+					$response = "Error";
+				}
 			}
 		} else {
 			$response = "No_user";
@@ -124,6 +137,27 @@
 			$response = "Error";
 		}
 	}
+
+    if(isset($_POST['action']) && $_POST['action'] == 'leave_room') {
+        $userId = $_POST['userId'];
+        $room_number = $_SESSION["room_number"];
+
+        $query = $conn->prepare("
+            DELETE FROM rooms_users 
+            WHERE room_id=:room_number and user_id=:user_id
+        ");
+        $query->bindParam(":user_id", $userId);
+        $query->bindParam(":room_number", $room_number);
+
+        $query->execute();
+        if($query->rowCount())
+        {
+            $response = "Success";
+            $_SESSION["room_number"] = null;
+        }else{
+            $response = "Error";
+        }
+    }
 
 	echo json_encode($response);
 ?>
