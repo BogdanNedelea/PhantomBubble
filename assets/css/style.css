@@ -27,7 +27,7 @@ ul{
 .inner-content{
 	height: 100%;
 	width: 100%;
-	padding: 100px;
+	padding-top: 10%;
 }
 
 .form-group{
@@ -232,4 +232,9 @@ ul{
 .dashboard-footer{
     width: 50%;
     display: inline-block;
+}
+
+.btn-default {
+	width: 120px;
+	margin: 5px;
 }

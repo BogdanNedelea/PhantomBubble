@@ -29,6 +29,11 @@ $('.kick-btn').click(function(e){
 	kickUser($userId);
 });
 
+$('.leave-btn').click(function(e){
+	$userId = (e.target.id);
+	leaveRoom($userId);
+});
+
 
 $('.btn-send').click(function () {
 	$message = $('.input-message').val();
@@ -171,6 +176,43 @@ function sendMessage(message){
 		console.log("Action not allowed !");
 	});
 }
+
+function leaveRoom(userId) {
+	$.ajax({
+	    type: "POST",
+	    url: 'room_actions.php',
+	    dataType: 'json',
+	    data: {
+	    	action:'leave_room',
+	    	userId: userId
+	    }
+	}).done(function (response) {
+	   	if (response === "Success") {
+			swal({
+			  title: "Success!",
+			  text: "You just left the room !",
+			  type: "success"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/dashboard.php");
+				}, 1000);
+			});
+		} else if (response === "Error"){
+			swal({
+			  title: "Error !",
+			  text: "There's been a problem. Please try again !",
+			  type: "error"
+			},function(){
+				setTimeout(function(){
+				   location.replace("/PhantomBubble/room.php");
+				}, 1000);
+			});
+		}
+	}).fail(function(data) {
+		console.log("Action not allowed !");
+	});
+}
+
 
 
 function kickUser(userId){

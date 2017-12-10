@@ -40,41 +40,43 @@
 			<div class="logo-container">
 				<img class="img-responsive" id="page-logo" src="assets/images/logo.png">
 			</div>
-			<h2 id="welcome-user"><?php print 'Welcome '.$_SESSION['username'].' !' ?></h2>
-			<div class="dashboard-panel">
-				<h3>Available rooms</h3>
-				<?php
-					$tempuserid= $_SESSION['user_id'];
-					$query = $conn->prepare("
-							SELECT rooms.id, rooms.name
-							FROM rooms inner join rooms_users
-							ON rooms_users.room_id=rooms.id
-							WHERE rooms_users.user_id=:temp_userid
-					");
 
-					$query->bindParam(":temp_userid", $tempuserid);
-					$query->execute();
+			<div class="col-xs-8 col-xs-offset-2">
+				<h2 id="welcome-user"><?php print 'Welcome '.$_SESSION['username'].' !' ?></h2>
+				<div class="dashboard-panel">
+					<h3>Available rooms</h3>
+					<?php
+						$tempuserid= $_SESSION['user_id'];
+						$query = $conn->prepare("
+								SELECT rooms.id, rooms.name
+								FROM rooms inner join rooms_users
+								ON rooms_users.room_id=rooms.id
+								WHERE rooms_users.user_id=:temp_userid
+						");
 
-				    while ($result = $query->fetch(PDO::FETCH_ASSOC)) { ?>
-					<br><button class="btn btn-info enter-room" 
-							id="<?php echo $result['id'];?>">
-								<?php echo $result['name'];?>
-						</button><br>
-				    <?php }
-				?>
-			</div>
-			<div class="dashboard-panel">
-				<div class="dashboard-footer">
-					<button class="btn btn-default add-room">Add room</button>
-					<div class="new-room"> 
-						<input class="form-control space-above" type="text" name="room-name" placeholder="Room name..." id="room-name">
-						<button class="btn btn-success create-room space-above"> Create </button>	
+						$query->bindParam(":temp_userid", $tempuserid);
+						$query->execute();
+
+					    while ($result = $query->fetch(PDO::FETCH_ASSOC)) { ?>
+						<br><button class="btn btn-info enter-room" 
+								id="<?php echo $result['id'];?>">
+									<?php echo $result['name'];?>
+							</button><br>
+					    <?php }
+					?>
+				</div>
+				<div class="dashboard-panel">
+					<div class="dashboard-footer">
+						<button class="btn btn-default add-room">Add room</button>
+						<div class="new-room"> 
+							<input class="form-control space-above" type="text" name="room-name" placeholder="Room name..." id="room-name">
+							<button class="btn btn-success create-room space-above"> Create </button>	
+						</div>
+					</div>
+					<div class="dashboard-footer pull-right">
+						<a href="logout.php"><button class="btn btn-danger pull-right">Logout</button> </a>
 					</div>
 				</div>
-				<div class="dashboard-footer pull-right">
-					<a href="logout.php"><button class="btn btn-danger pull-right">Logout</button> </a>
-				</div>
-				
 			</div>
 		</div>
 	</div>

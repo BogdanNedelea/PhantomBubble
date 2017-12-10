@@ -7,33 +7,67 @@
 
     $isAdmin = false;
 
+    function checkIfAdmin () {
+		$user_id = $_SESSION['user_id'];
+		$room_number = $_SESSION["room_number"];
+		include 'db.php';
+
+		$query = $conn->prepare("
+			SELECT created_by
+			FROM rooms
+			WHERE created_by=:user_id and id=:room_number
+		");
+
+		$query->bindParam(":user_id", $user_id);
+		$query->bindParam(":room_number", $room_number);
+		$query->execute();
+		global $isAdmin;
+		if($result = $query->fetch(PDO::FETCH_ASSOC)){
+			return $isAdmin = true; 
+		} else {
+			return $isAdmin = false; 
+		}
+    }
+
 	function renderRoomUsers($username, $user_id, $isAdmin){
-			$template = "";
-			$template .= "<div class=\"col-xs-12\">";
-			$template .= "<div class=\"users-list\">$username</div>";
-			if($isAdmin){
-				$template .= "<button class=\"btn btn-danger btn-xs kick-btn\" id=\"$user_id\"> Kick </button>";
-			}
-			$template .= "</div>";
-			return $template; 
+		$template = "";
+		$template .= "<div class=\"col-xs-12\">";
+		$template .= "<div class=\"users-list\">$username</div>";
+		if($isAdmin){
+			$template .= "<button class=\"btn btn-danger btn-xs kick-btn\" id=\"$user_id\"> Kick </button>";
+		}
+		$template .= "</div>";
+		return $template; 
+	}
+
+	function roomSettings() {
+		$roomNumber = $_SESSION["room_number"];
+		$user_id = $_SESSION['user_id'];
+
+		$template = "";
+		$template .= "<button class=\"btn btn-danger leave-btn \" id=\"$user_id\"> Leave room </button> ";
+
+		if(checkIfAdmin()){
+			$template .= "<button class=\"btn btn-danger delete-room\" id=\"$roomNumber\"> Delete conversation </button>";
+		}
+
+		return $template;					
 	}
 
 	function renderMesseges($username, $message){
-			$template = "";
-			$template .= "<div class=\"message-box\">";
-				$template .= "<div class=\"text-center\">";
-				$template .= "<p>".$username."</p>";
-				$template .= "</div>";
-
-				$template .= "<div>";
-				$template .= "<p>".$message."</p>";
-				$template .= "</div>";
+		$template = "";
+		$template .= "<div class=\"message-box\">";
+			$template .= "<img class=\"img-responsive message-avatar\" src=\"./assets/images/userlogo.jpeg\">";
+			$template .= "<div class=\"text-center\">";
+			$template .= "<p>".$username."</p>";
 			$template .= "</div>";
 
-			return $template;
+			$template .= "<div>";
+			$template .= "<p>".$message."</p>";
+			$template .= "</div>";
+		$template .= "</div>";
 
-			// Poza inca nu o avem in DB !
-			// $template = "<img class=\"img-responsive message-avatar\" src=\"https://scontent-arn2-1.xx.fbcdn.net/v/	t1.0-9/11896180_1008851132488645_373543554735047172_n.jpg?oh=97ede1c71c529e5209a0650929e56def&oe=592B8476\">"; 
+		return $template;
 	}
 ?>
 
@@ -81,10 +115,10 @@
 			<div class="col-xs-2 col-xs-offset-2 containers left-container text-center">
 				<div class="panel-one">
 					<div>
-						<img class="img-responsive profile-avatar" src="https://scontent-arn2-1.xx.fbcdn.net/v/t1.0-9/11896180_1008851132488645_373543554735047172_n.jpg?oh=97ede1c71c529e5209a0650929e56def&oe=592B8476">
+						<img class="img-responsive profile-avatar" src="./assets/images/userlogo.jpeg">
 					</div>
 					<div>
-						<div>
+						<div class="col-xs-10 col-xs-offset-1">
 							<button class="btn btn-default add-user">Add User</button>
 							<div class="new-user"> 
 								<input class="form-control" type="text" name="new-user" id="new-user"> 
@@ -92,8 +126,9 @@
 						</div>
 						<div>
 							<button class="btn btn-default edit-room">Room Settings</button>
-							<div class="room-settings"> 
-								<button class="btn btn-danger delete-room" id='<?php echo $_SESSION["room_number"]?>'>Delete conversation</button>
+							<div class="room-settings">
+								<!-- Render room settings  -->
+								<?php echo roomSettings($isAdmin) ?>
 							</div>
 						</div>
 					</div>
@@ -103,23 +138,7 @@
 						<div class="room-users">
 							<?php 
 								// Check if the actual user is the admin
-								$user_id = $_SESSION['user_id'];
-								$room_number = $_SESSION["room_number"];
-								$query = $conn->prepare("
-									SELECT created_by
-									FROM rooms
-									WHERE created_by=:user_id and id=:room_number
-								");
-
-								$query->bindParam(":user_id", $user_id);
-								$query->bindParam(":room_number", $room_number);
-								$query->execute();
-									global $isAdmin;
-									if($result = $query->fetch(PDO::FETCH_ASSOC)){
-										$isAdmin = true; 
-									} else {
-										$isAdmin = false; 
-									}
+								checkIfAdmin();
 
 								// Display all the members of this room
 								$query = $conn->prepare("
