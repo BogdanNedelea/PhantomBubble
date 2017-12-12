@@ -63,10 +63,11 @@
 			$roomId = $_SESSION["room_number"];
 
 			$stmt = $conn->prepare("
-				SELECT room_id FROM rooms_users
-				WHERE user_id=:user_id
+				SELECT id FROM rooms_users
+				WHERE user_id=:user_id AND room_id=:room_id
 			");
 			$stmt->bindParam(":user_id", $userId);
+			$stmt->bindParam(":room_id", $roomId);
 			$stmt->execute();
 
 			if($stmt->rowCount()) {

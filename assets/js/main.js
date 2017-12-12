@@ -79,7 +79,7 @@ function addUser(newUser){
 			  type: "success"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 1000);
 			});
 		} else if (response === "Error"){
@@ -89,7 +89,7 @@ function addUser(newUser){
 			  type: "error"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 1000);
 			});
 		} else if (response === "No_user"){
@@ -127,7 +127,7 @@ function deleteRoom(roomId){
 			  type: "success"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/dashboard.php");
+				   location.replace("/dashboard.php");
 				}, 1000);
 			});
 		} else if (response === "Error"){
@@ -137,7 +137,7 @@ function deleteRoom(roomId){
 			  type: "error"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 1000);
 			});
 		}
@@ -160,7 +160,7 @@ function sendMessage(message){
 	   		// $(".messages-container").append('<div class=\"message-box\">'+message+'</div>');
 	   		// $(".input-message").val('');
 			setTimeout(function(){
-			   location.replace("/PhantomBubble/room.php");
+			   location.replace("/room.php");
 			}, 100);
 		} else if (response === "Error"){
 			swal({
@@ -169,7 +169,7 @@ function sendMessage(message){
 			  type: "error"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 100);
 			});
 		}
@@ -195,7 +195,7 @@ function leaveRoom(userId) {
 			  type: "success"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/dashboard.php");
+				   location.replace("/dashboard.php");
 				}, 1000);
 			});
 		} else if (response === "Error"){
@@ -205,7 +205,7 @@ function leaveRoom(userId) {
 			  type: "error"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 1000);
 			});
 		}
@@ -233,7 +233,7 @@ function kickUser(userId){
 			  type: "success"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 1000);
 			});
 		} else if (response === "Error"){
@@ -243,7 +243,7 @@ function kickUser(userId){
 			  type: "error"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 1000);
 			});
 		}
@@ -268,7 +268,7 @@ function createRoom() {
 			  type: "success"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 1000);
 			});
 		} else if(response === "Duplicate") {
@@ -299,7 +299,7 @@ function accessRoom(roomId) {
 			  type: "success"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/room.php");
+				   location.replace("/room.php");
 				}, 1000);
 			});
 		} else if (response === "Invalid_room") {
@@ -334,7 +334,7 @@ function signup() {
 			  type: "success"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/index.php");
+				   location.replace("/index.php");
 				}, 1000);
 			});
 		} else if(response === "Duplicate") {
@@ -370,7 +370,7 @@ function login() {
 			  type: "success"
 			},function(){
 				setTimeout(function(){
-				   location.replace("/PhantomBubble/dashboard.php");
+				   location.replace("/dashboard.php");
 				}, 1000);
 			});
 		}
